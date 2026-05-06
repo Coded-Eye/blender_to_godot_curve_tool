@@ -15,6 +15,7 @@ func _parse_node_extensions(state: GLTFState, gltf_node: GLTFNode, extensions: D
 	var curves :  Array[Curve3D] = []
 	
 	var splines : Array = data["splines"]
+	print(splines)
 	
 	for spline in splines:
 		var spline_type : String = spline.get("type")
@@ -42,6 +43,15 @@ func _parse_node_extensions(state: GLTFState, gltf_node: GLTFNode, extensions: D
 					new_curve.set_point_tilt(idx, points[idx]["tilt"])
 				new_curve.closed = closed
 				curves.append(new_curve)
+			"POLY":
+				var new_curve := Curve3D.new()
+				for idx in range(points.size()):
+					new_curve.add_point(
+						Vector3(points[idx]["co"][0], points[idx]["co"][2], -points[idx]["co"][1]), 
+					)
+				new_curve.closed = closed
+				curves.append(new_curve)
+				
 	
 	
 	gltf_node.set_additional_data("GLTFCurveExtention", curves)
